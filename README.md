@@ -12,7 +12,7 @@ public class FeatureLauncherTest {
 }
 ```
 
-By default feature files are looked for in the FeatureLauncherTest classpath.
+By default feature files are looked for in the packae of your main test (`FeatureLauncherTest` in the example).
 To override that behavior, use CucumberOptions, for example: `@CucumberOptions(features = "classpath:features")`
 
 ## Cucumber concerns
