@@ -36,7 +36,8 @@ public class MvcApplication {
 	}
 
 	@RequestMapping("/create_user")
-	String createUser(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+	String createUser(@RequestParam("firstName") String firstName,
+			@RequestParam("lastName") String lastName) {
 		int id = sequenceGenerator.incrementAndGet();
 		database.put(id, new Customer(firstName, lastName));
 		return "User saved : id=" + id;
@@ -44,6 +45,12 @@ public class MvcApplication {
 
 	@RequestMapping("/list_users")
 	List<String> listUsers() {
-		return database.entrySet().stream().map(e -> e.getValue().getFirstName() + " " + e.getValue().getLastName()).collect(Collectors.toList());
+		return database.entrySet()
+				.stream()
+				.map(e -> e.getValue()
+						.getFirstName() + " "
+						+ e.getValue()
+								.getLastName())
+				.collect(Collectors.toList());
 	}
 }

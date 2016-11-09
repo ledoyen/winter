@@ -23,11 +23,13 @@ public class WebStepDefs {
 
 	@Then("^the HTTP response code should be OK$")
 	public void the_response_code_should_be_ok() throws Exception {
-		lastRequest.andExpect(MockMvcResultMatchers.status().isOk());
+		lastRequest.andExpect(MockMvcResultMatchers.status()
+				.isOk());
 	}
 
 	@Then("^the HTTP response body should be (.*)$")
 	public void the_response_body_should_be(String expectedBody) throws Exception {
-		lastRequest.andExpect(MockMvcResultMatchers.content().string(expectedBody));
+		lastRequest.andExpect(MockMvcResultMatchers.content()
+				.string(expectedBody));
 	}
 }

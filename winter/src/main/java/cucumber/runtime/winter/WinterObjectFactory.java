@@ -73,7 +73,8 @@ public class WinterObjectFactory implements ObjectFactory {
 		}
 
 		final Annotation[] annotations = type.getDeclaredAnnotations();
-		return (annotations.length == 1) && annotatedWithSupportedSpringRootTestAnnotations(annotations[0].annotationType());
+		return (annotations.length == 1)
+				&& annotatedWithSupportedSpringRootTestAnnotations(annotations[0].annotationType());
 	}
 
 	private static boolean annotatedWithSupportedSpringRootTestAnnotations(Class<?> type) {
@@ -84,11 +85,13 @@ public class WinterObjectFactory implements ObjectFactory {
 		Annotation[] annotations1 = stepClassWithSpringContext.getAnnotations();
 		Annotation[] annotations2 = stepClass.getAnnotations();
 		if (annotations1.length != annotations2.length) {
-			throw new CucumberException("Annotations differs on glue classes found: " + stepClassWithSpringContext.getName() + ", " + stepClass.getName());
+			throw new CucumberException("Annotations differs on glue classes found: "
+					+ stepClassWithSpringContext.getName() + ", " + stepClass.getName());
 		}
 		for (Annotation annotation : annotations1) {
 			if (!isAnnotationInArray(annotation, annotations2)) {
-				throw new CucumberException("Annotations differs on glue classes found: " + stepClassWithSpringContext.getName() + ", " + stepClass.getName());
+				throw new CucumberException("Annotations differs on glue classes found: "
+						+ stepClassWithSpringContext.getName() + ", " + stepClass.getName());
 			}
 		}
 	}
@@ -107,7 +110,8 @@ public class WinterObjectFactory implements ObjectFactory {
 		if (stepClassWithSpringContext != null) {
 			testContextManager = new CucumberTestContextManager(stepClassWithSpringContext);
 		} else {
-			throw new CucumberException("No Spring Context available, supply one with @ContextConfiguration or use SpringFactory (cucumber-spring) instead");
+			throw new CucumberException(
+					"No Spring Context available, supply one with @ContextConfiguration or use SpringFactory (cucumber-spring) instead");
 		}
 		notifyContextManagerAboutTestClassStarted();
 		if (beanFactory == null || isNewContextCreated()) {
@@ -119,9 +123,12 @@ public class WinterObjectFactory implements ObjectFactory {
 		GlueCodeContext.INSTANCE.start();
 	}
 
-	private void registerStepClassBeanDefinition(ConfigurableListableBeanFactory beanFactory, Class<?> stepClass) {
+	private void registerStepClassBeanDefinition(ConfigurableListableBeanFactory beanFactory,
+			Class<?> stepClass) {
 		BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
-		BeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(stepClass).setScope(GlueCodeScope.NAME).getBeanDefinition();
+		BeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(stepClass)
+				.setScope(GlueCodeScope.NAME)
+				.getBeanDefinition();
 		registry.registerBeanDefinition(stepClass.getName(), beanDefinition);
 	}
 
@@ -163,7 +170,8 @@ public class WinterObjectFactory implements ObjectFactory {
 	class CucumberTestContextManager extends TestContextManager {
 
 		public CucumberTestContextManager(Class<?> testClass) {
-			super(TestContextManagers.createTestContextBootstrapper(testClass, AutomockerFullConfiguration.class));
+			super(TestContextManagers.createTestContextBootstrapper(testClass,
+					AutomockerFullConfiguration.class));
 			registerGlueCodeScope(getContext());
 		}
 
@@ -177,7 +185,8 @@ public class WinterObjectFactory implements ObjectFactory {
 
 		private void registerGlueCodeScope(ConfigurableApplicationContext context) {
 			do {
-				context.getBeanFactory().registerScope(GlueCodeScope.NAME, new GlueCodeScope());
+				context.getBeanFactory()
+						.registerScope(GlueCodeScope.NAME, new GlueCodeScope());
 				context = (ConfigurableApplicationContext) context.getParent();
 			} while (context != null);
 		}
