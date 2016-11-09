@@ -19,6 +19,7 @@
 	<modules>
 		<module>winter</module>
 
+		<module>examples/example-no-test-code</module>
 		<module>examples/example-winter-mvc</module>
 	</modules>
 

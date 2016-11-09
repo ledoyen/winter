@@ -45,7 +45,9 @@ public class WinterObjectFactory implements ObjectFactory {
 	}
 
 	public void addContextClass(Class<?> contextClass) {
-		stepClassWithSpringContext = contextClass;
+		if (dependsOnSpringContext(contextClass)) {
+			stepClassWithSpringContext = contextClass;
+		}
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class WinterObjectFactory implements ObjectFactory {
 		return true;
 	}
 
-	private boolean dependsOnSpringContext(Class<?> type) {
+	public static boolean dependsOnSpringContext(Class<?> type) {
 		boolean hasStandardAnnotations = annotatedWithSupportedSpringRootTestAnnotations(type);
 
 		if (hasStandardAnnotations) {
@@ -74,7 +76,7 @@ public class WinterObjectFactory implements ObjectFactory {
 		return (annotations.length == 1) && annotatedWithSupportedSpringRootTestAnnotations(annotations[0].annotationType());
 	}
 
-	private boolean annotatedWithSupportedSpringRootTestAnnotations(Class<?> type) {
+	private static boolean annotatedWithSupportedSpringRootTestAnnotations(Class<?> type) {
 		return type.isAnnotationPresent(ContextConfiguration.class);
 	}
 
@@ -105,7 +107,7 @@ public class WinterObjectFactory implements ObjectFactory {
 		if (stepClassWithSpringContext != null) {
 			testContextManager = new CucumberTestContextManager(stepClassWithSpringContext);
 		} else {
-			throw new CucumberException("No Spring Context available, maybe you need to use SpringFactory (cucumber-spring) instead");
+			throw new CucumberException("No Spring Context available, supply one with @ContextConfiguration or use SpringFactory (cucumber-spring) instead");
 		}
 		notifyContextManagerAboutTestClassStarted();
 		if (beanFactory == null || isNewContextCreated()) {

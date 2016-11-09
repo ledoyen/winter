@@ -13,6 +13,7 @@
 	<properties>
 		<automocker.version>1.0.0-SNAPSHOT</automocker.version>
 		<cucumber.version>1.2.5</cucumber.version>
+		<bytebuddy.version>1.5.3</bytebuddy.version>
 	</properties>
 
 	<dependencies>
@@ -20,6 +21,11 @@
 			<groupId>com.github.ledoyen.automocker</groupId>
 			<artifactId>spring-automocker</artifactId>
 			<version>${automocker.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>${bytebuddy.version}</version>
 		</dependency>
 
 		<!-- CUCUMBER -->
