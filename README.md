@@ -52,11 +52,11 @@ By default feature files are looked for in the *features* test directory (src/te
 To override that behavior, use [Cucumber options](https://cucumber.io/docs/reference/jvm#list-configuration-options).
 
 ## Cucumber concerns
-As Winter is now based on Cucumber, Cucumber-related features and limitations are present.
+As Winter is now based on **Cucumber**, Cucumber-related features and limitations are present.
 
 #### Cucumber options
 You can use [Cucumber options](https://cucumber.io/docs/reference/jvm#list-configuration-options) to customize your test structure and add custom Step Definitions.
-Step Definitions supports Spring's annotation such as `Autowired` without any additional `@ContextConfiguration` if you use `WinterTestLauncher`.
+Step Definitions supports **Spring**'s annotation such as `Autowired` without any additional `@ContextConfiguration` if you use `WinterTestLauncher`.
 
 #### Cucumber runner
 This applies only if you are not using `WinterTestLauncher` or `WinterJUnit4FeatureRunner`, but `Cucumber` instead.
@@ -67,7 +67,7 @@ To fix the problem you have two choises :
 * Dedicate specific classpaths for specific executions through your build system
 * Force cucumber to use one or another `ObjectFactory` by passing the adequate system property:
 ```
--D-Dcucumber.api.java.ObjectFactory=cucumber.runtime.winter.WinterObjectFactory
+-Dcucumber.api.java.ObjectFactory=cucumber.runtime.winter.WinterObjectFactory
 ```
 
 If you do not have another `ObjectFactory` in your classpath, Cucumber will nicely pickup the **Winter** one through its `cucumber.runtime.java.ObjectFactoryLoader`.
@@ -76,7 +76,7 @@ To benefit from **Winter** prefefined Step Definitions you will also have to ind
 ```java
 @RunWith(Cucumber.class)
 @CucumberOptions(glue = { "classpath:com/github/ledoyen/winter/stepdef", "classpath:my/custom/stepdef" })
-public class MvcApplicationCucumberTest {
+public class MyApplicationCucumberTest {
 
 }
 ```
