@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContextManager;
 
 import com.github.ledoyen.automocker.internal.TestContextManagers;
+import com.github.ledoyen.winter.WinterJUnit4FeatureRunner;
 import com.github.ledoyen.winter.internal.AutomockerFullConfiguration;
 
 import cucumber.api.java.ObjectFactory;
@@ -36,7 +37,7 @@ public class WinterObjectFactory implements ObjectFactory {
 	private Class<?> stepClassWithSpringContext = null;
 
 	public WinterObjectFactory() {
-		LOGGER.info("Cucumber starts using Winter ObjectFactory");
+		LOGGER.debug("Cucumber starts with Winter ObjectFactory");
 		INSTANCE = this;
 	}
 
@@ -108,10 +109,15 @@ public class WinterObjectFactory implements ObjectFactory {
 	@Override
 	public void start() {
 		if (stepClassWithSpringContext != null) {
-			testContextManager = new CucumberTestContextManager(stepClassWithSpringContext);
+			if (testContextManager == null) {
+				testContextManager = new CucumberTestContextManager(stepClassWithSpringContext);
+				LOGGER.debug("Spring context intialized with mocks in "
+						+ WinterJUnit4FeatureRunner.getTimeSinceStart());
+			}
+			// no dirty context, so no need to clean
 		} else {
 			throw new CucumberException(
-					"No Spring Context available, supply one with @ContextConfiguration or use SpringFactory (cucumber-spring) instead");
+					"No Spring Context available, supply one with @ContextConfiguration, CLI parameter winter.ContextConfiguration or use SpringFactory (cucumber-spring) instead");
 		}
 		notifyContextManagerAboutTestClassStarted();
 		if (beanFactory == null || isNewContextCreated()) {
