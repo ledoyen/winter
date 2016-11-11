@@ -50,7 +50,8 @@ public class WinterJUnit4FeatureRunner extends Cucumber {
 	public void run(RunNotifier notifier) {
 		notifier.addListener(new RunListener() {
 			public void testFailure(Failure failure) throws Exception {
-				if (!(failure.getException() instanceof PendingException)) {
+				if (!(failure.getException() instanceof PendingException)
+						&& !(failure.getException() instanceof AssertionError)) {
 					LOGGER.error(failure.getDescription() + ": " + failure.getMessage(),
 							failure.getException());
 				}

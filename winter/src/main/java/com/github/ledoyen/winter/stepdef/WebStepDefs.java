@@ -1,5 +1,7 @@
 package com.github.ledoyen.winter.stepdef;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
@@ -8,6 +10,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.github.ledoyen.automocker.extension.mvc.HttpStatusMatcher;
+import com.github.ledoyen.automocker.extension.mvc.JsonMatchers;
+import com.github.ledoyen.automocker.tools.ThrowingConsumer;
+import com.github.ledoyen.winter.model.ExpressionAndValue;
 
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -50,11 +55,25 @@ public class WebStepDefs {
 				.string(expectedBody));
 	}
 
-	@Then("^an HTTP GET request on resource (.+) responds status (.+) with body$")
-	public void a_get_request_on_resource_returns(String resource, String expectedStatus,
+	@Then("^an HTTP GET request on resource (.+) should respond status (.+) with body$")
+	public void a_get_request_on_resource_should_respond(String resource, String expectedStatus,
 			String expectedContent) throws Throwable {
 		a_get_request_is_made_on(resource);
 		the_response_code_should_be(expectedStatus);
 		the_response_body_should_be(expectedContent);
+	}
+
+	@Then("^HTTP response body should match$")
+	public void response_body_should_match(List<ExpressionAndValue> expressionAndValues) throws Throwable {
+		expressionAndValues.forEach(ThrowingConsumer.silent(ev -> lastRequest.andExpect(
+				MockMvcResultMatchers.jsonPath(ev.getExpression(), JsonMatchers.is(ev.getValue())))));
+	}
+
+	@Then("^an HTTP GET request on resource (.+) should respond status (.+) with body matching$")
+	public void a_get_request_on_resource_should_respond_matching(String resource, String expectedStatus,
+			List<ExpressionAndValue> expressionAndValues) throws Throwable {
+		a_get_request_is_made_on(resource);
+		the_response_code_should_be(expectedStatus);
+		response_body_should_match(expressionAndValues);
 	}
 }
