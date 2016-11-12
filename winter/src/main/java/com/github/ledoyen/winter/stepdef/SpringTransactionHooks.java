@@ -6,7 +6,8 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.SimpleTransactionStatus;
+
+import com.github.ledoyen.automocker.tools.Classes;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -32,20 +33,15 @@ import cucumber.api.java.Before;
  */
 public class SpringTransactionHooks implements BeanFactoryAware {
 
+	private static final boolean ENABLED = Classes
+			.isPresent("org.springframework.transaction.TransactionStatus");
+
 	private BeanFactory beanFactory;
 	private String txnManagerBeanName;
 
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		this.beanFactory = beanFactory;
-	}
-
-	/**
-	 * @return the (optional) bean name for the transaction manager to be obtained - if null, attempt will be made to find a transaction manager by
-	 *         bean type
-	 */
-	public String getTxnManagerBeanName() {
-		return txnManagerBeanName;
 	}
 
 	/**
@@ -58,32 +54,49 @@ public class SpringTransactionHooks implements BeanFactoryAware {
 		this.txnManagerBeanName = txnManagerBeanName;
 	}
 
-	private TransactionStatus transactionStatus;
+	private TransactionHolder holder;
 
 	@Before(value = { "@txn" }, order = 100)
 	public void startTransaction() {
-		transactionStatus = obtainPlatformTransactionManager()
-				.getTransaction(new DefaultTransactionDefinition());
+		if (ENABLED) {
+			holder = new TransactionHolder(beanFactory, txnManagerBeanName).start();
+		}
 	}
 
 	@After(value = { "@txn" }, order = 100)
 	public void rollBackTransaction() {
-		obtainPlatformTransactionManager().rollback(transactionStatus);
-	}
-
-	public PlatformTransactionManager obtainPlatformTransactionManager() {
-		if (getTxnManagerBeanName() == null) {
-			return beanFactory.getBean(PlatformTransactionManager.class);
-		} else {
-			return beanFactory.getBean(txnManagerBeanName, PlatformTransactionManager.class);
+		if (ENABLED) {
+			holder.stop();
 		}
 	}
 
-	public TransactionStatus getTransactionStatus() {
-		return transactionStatus;
-	}
+	private static class TransactionHolder {
+		private final BeanFactory beanFactory;
+		private final String txnManagerBeanName;
 
-	public void setTransactionStatus(SimpleTransactionStatus transactionStatus) {
-		this.transactionStatus = transactionStatus;
+		private TransactionStatus transactionStatus;
+
+		public TransactionHolder(BeanFactory beanFactory, String txnManagerBeanName) {
+			this.beanFactory = beanFactory;
+			this.txnManagerBeanName = txnManagerBeanName;
+		}
+
+		private TransactionHolder start() {
+			transactionStatus = obtainPlatformTransactionManager()
+					.getTransaction(new DefaultTransactionDefinition());
+			return this;
+		}
+
+		private void stop() {
+			obtainPlatformTransactionManager().rollback(transactionStatus);
+		}
+
+		public PlatformTransactionManager obtainPlatformTransactionManager() {
+			if (txnManagerBeanName == null) {
+				return beanFactory.getBean(PlatformTransactionManager.class);
+			} else {
+				return beanFactory.getBean(txnManagerBeanName, PlatformTransactionManager.class);
+			}
+		}
 	}
 }
