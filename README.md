@@ -8,38 +8,15 @@ Alter your **Maven** *pom.xml* with the following:
 ```xml
 <project>
 ...
-	<dependencies>
-	...
-		<dependency>
-			<groupId>com.github.ledoyen.winter</groupId>
-			<artifactId>winter</artifactId>
-			<version>${winter.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	...
 	<build>
-		...
 		<plugins>
-			...
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<groupId>com.github.ledoyen.winter</groupId>
+				<artifactId>winter-maven-plugin</artifactId>
+				<version>${winter.version}</version>
 				<executions>
 					<execution>
-						<id>winter-test</id>
-						<phase>test</phase>
 						<goals><goal>test</goal></goals>
-						<configuration>
-							<test>WinterTestLauncher</test>
-							<dependenciesToScan>
-                				<dependency>com.github.ledoyen.winter:winter</dependency>
-            				</dependenciesToScan>
-            				<systemPropertyVariables>
-								<winter.ContextConfiguration>your.ConfigurationClass</winter.ContextConfiguration>
-							</systemPropertyVariables>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -48,8 +25,36 @@ Alter your **Maven** *pom.xml* with the following:
 </project>
 ```
 
-By default feature files are looked for in the *features* test directory (src/test/resources/features).
-To override that behavior, use [Cucumber options](https://cucumber.io/docs/reference/jvm#list-configuration-options).
+And add some *feature* files. For example:
+
+```Cucumber
+@txn
+Feature: Owner service
+
+Scenario: owner creation
+  When using an HTTP header Content-Type=application/json
+  And an HTTP POST request is made on resource /owner with content
+    """
+      {
+      	"firstName": "Steeve",
+      	"lastName": "Jobs",
+      	"address": "1 Infinite Loop",
+      	"city": "Cupertino",
+      	"telephone": "0123456789"
+      }
+    """
+  Then the HTTP response code should be CREATED
+  And an HTTP GET request on resource /owner/list should respond status 200 with body matching
+  | Expression                             | Expected result |
+  | $[?(@.firstName == 'Steeve')].lastName | Jobs            |
+  | $[?(@.firstName == 'Steeve')].city     | Cupertino       |
+```
+
+Feature files are looked for in the *features* test directory (src/test/resources/features).
+To override that behavior, use [Cucumber options](https://cucumber.io/docs/reference/jvm#list-configuration-options) through `systemPropertyVariables` parameter.
+
+Entry class is the only main class available (execution will fail otherwise).
+To override that behavior, use  `configurationClass` parameter or `winter.configurationClass` System property.
 
 ## Cucumber concerns
 As Winter is now based on **Cucumber**, Cucumber-related features and limitations are present.

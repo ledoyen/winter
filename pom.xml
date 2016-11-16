@@ -18,6 +18,7 @@
 
 	<modules>
 		<module>winter</module>
+		<module>winter-maven-plugin</module>
 
 		<module>examples/example-no-test-code</module>
 		<module>examples/example-winter-mvc</module>
