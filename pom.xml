@@ -22,6 +22,7 @@
 
 		<module>examples/example-no-test-code</module>
 		<module>examples/example-winter-mvc</module>
+		<module>examples/example-winter-batch</module>
 	</modules>
 
 	<scm>

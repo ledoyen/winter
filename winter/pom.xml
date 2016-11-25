@@ -64,6 +64,16 @@
 			<artifactId>json-path-assert</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.batch</groupId>
+			<artifactId>spring-batch-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

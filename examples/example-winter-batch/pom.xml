@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.github.ledoyen.winter</groupId>
+		<artifactId>winter-reactor</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../..</relativePath>
+	</parent>
+
+	<groupId>com.github.ledoyen.winter.examples</groupId>
+	<artifactId>example-winter-batch</artifactId>
+	<name>Batch Example &amp; IT</name>
+	<description>Winter Batch Example and Integration Test</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.batch</groupId>
+			<artifactId>javax.batch-api</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.ledoyen.winter</groupId>
+			<artifactId>winter</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-parent</artifactId>
+				<version>1.3.3.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.ledoyen.winter</groupId>
+				<artifactId>winter-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
