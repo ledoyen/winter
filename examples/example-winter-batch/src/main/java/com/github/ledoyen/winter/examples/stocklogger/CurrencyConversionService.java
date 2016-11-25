@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 public class CurrencyConversionService {
 
 	public BigDecimal convertCurrency(BigDecimal value, Currency from, Currency to) {
+		if (value == null) {
+			return BigDecimal.ZERO;
+		}
 		return value.multiply(new BigDecimal("2"));
 	}
 }

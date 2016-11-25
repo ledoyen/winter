@@ -1,26 +1,39 @@
 package com.github.ledoyen.winter.stepdef;
 
-import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecutionException;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.launch.JobLauncher;
+import javax.inject.Provider;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.github.ledoyen.automocker.extension.batch.BatchLauncherMock;
+import com.github.ledoyen.automocker.extension.batch.BatchMock;
+
+import cucumber.api.java.After;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class BatchStepDefs {
 
 	@Autowired
-	private JobLauncher jobLauncher;
+	private Provider<BatchLauncherMock> jobLauncher;
 
-	@Autowired
-	private Map<String, Job> jobsByName;
+	private BatchMock lastJobExecution;
 
 	@When("^the job (.+) is launched$")
-	public void using_a_header(String jobName) throws JobExecutionException {
-		Job job = jobsByName.get(jobName);
-		jobLauncher.run(job, new JobParameters());
+	public void job_is_launched(String jobName) throws Exception {
+		lastJobExecution = jobLauncher.get()
+				.launch(jobName);
+	}
+
+	@Then("^execution is a success$")
+	public void execution_is_a_success() {
+		assertThat(lastJobExecution.getAllFailureExceptions()).as("Batch failure exceptions")
+				.hasSize(0);
+	}
+
+	@After
+	public void tearDownScenario() {
+		lastJobExecution = null;
 	}
 }
