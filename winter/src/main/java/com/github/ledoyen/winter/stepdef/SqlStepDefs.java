@@ -1,12 +1,11 @@
 package com.github.ledoyen.winter.stepdef;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Provider;
 
-import org.assertj.core.util.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.ledoyen.automocker.extension.sql.Connections;
@@ -20,6 +19,8 @@ import cucumber.api.java.After;
 import cucumber.api.java.en.Given;
 
 public class SqlStepDefs {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SqlStepDefs.class);
 
 	@Autowired
 	private Provider<DatasourceLocator> datasourceLocator;
@@ -39,10 +40,11 @@ public class SqlStepDefs {
 		tablesToClean.asMap()
 				.forEach((dsName, names) -> DataSources.doInConnection(datasourceLocator.get()
 						.getDataSource(dsName), c -> {
-							// TODO fix this, not working
-							List<String> copy = Lists.newArrayList(names);
-							Collections.sort(copy, Comparator.reverseOrder());
+							Connections.execute(c, "SET REFERENTIAL_INTEGRITY FALSE");
 							names.forEach(name -> Connections.truncate(c, name));
+							Connections.execute(c, "SET REFERENTIAL_INTEGRITY TRUE");
+							LOGGER.info("[" + dsName + "] Tables (" + names.stream()
+									.collect(Collectors.joining(", ")) + ") truncated");
 						}));
 		tablesToClean.clear();
 	}
