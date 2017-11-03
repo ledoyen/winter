@@ -12,7 +12,6 @@ import org.junit.runners.model.InitializationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.ledoyen.winter.internal.TestClassBuilder;
 import com.github.ledoyen.winter.stepdef.AnchorStepDef;
 import com.google.common.base.Stopwatch;
 
@@ -23,51 +22,44 @@ import cucumber.runtime.winter.WinterObjectFactory;
 
 public class WinterJUnit4FeatureRunner extends Cucumber {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WinterJUnit4FeatureRunner.class);
-	private static final Stopwatch sw = Stopwatch.createStarted();
+    private static final Logger LOGGER = LoggerFactory.getLogger(WinterJUnit4FeatureRunner.class);
+    private static final Stopwatch sw = Stopwatch.createStarted();
 
-	static {
-		initializeCucumberProperties();
-	}
+    static {
+        initializeCucumberProperties();
+    }
 
-	public static String getTimeSinceStart() {
-		return sw.toString();
-	}
+    public static String getTimeSinceStart() {
+        return sw.toString();
+    }
 
-	public WinterJUnit4FeatureRunner(Class<?> clazz) throws InitializationError, IOException {
-		super(clazz);
-		if (WinterObjectFactory.dependsOnSpringContext(clazz)) {
-			WinterObjectFactory.getInstance()
-					.addContextClass(clazz);
-		} else {
-			TestClassBuilder.getSystemProvidedConfigurationClass()
-					.map(TestClassBuilder::buildTestClass)
-					.ifPresent(WinterObjectFactory.getInstance()::addContextClass);
-		}
-	}
+    public WinterJUnit4FeatureRunner(Class<?> testClass) throws InitializationError, IOException {
+        super(testClass);
+        WinterObjectFactory.getInstance().addContextClass(testClass);
+    }
 
-	@Override
-	public void run(RunNotifier notifier) {
-		notifier.addListener(new RunListener() {
-			public void testFailure(Failure failure) throws Exception {
-				if (!(failure.getException() instanceof PendingException)
-						&& !(failure.getException() instanceof AssertionError)) {
-					LOGGER.error(failure.getDescription() + ": " + failure.getMessage(),
-							failure.getException());
-				}
-			}
-		});
-		super.run(notifier);
-		LOGGER.info("All tests done in " + getTimeSinceStart());
-	}
+    @Override
+    public void run(RunNotifier notifier) {
+        notifier.addListener(new RunListener() {
+            public void testFailure(Failure failure) throws Exception {
+                if (!(failure.getException() instanceof PendingException)
+                        && !(failure.getException() instanceof AssertionError)) {
+                    LOGGER.error(failure.getDescription() + ": " + failure.getMessage(),
+                            failure.getException());
+                }
+            }
+        });
+        super.run(notifier);
+        LOGGER.info("All tests done in " + getTimeSinceStart());
+    }
 
-	private static void initializeCucumberProperties() {
-		List<String> args = new ArrayList<>();
-		Package stepDefPackage = AnchorStepDef.class.getPackage();
-		args.add("-g classpath:" + stepDefPackage.getName()
-				.replaceAll("\\.", "/"));
-		System.setProperty(ObjectFactory.class.getName(), WinterObjectFactory.class.getName());
-		System.setProperty("cucumber.options", args.stream()
-				.collect(Collectors.joining(" ")));
-	}
+    private static void initializeCucumberProperties() {
+        List<String> args = new ArrayList<>();
+        Package stepDefPackage = AnchorStepDef.class.getPackage();
+        args.add("-g classpath:" + stepDefPackage.getName()
+                .replaceAll("\\.", "/"));
+        System.setProperty(ObjectFactory.class.getName(), WinterObjectFactory.class.getName());
+        System.setProperty("cucumber.options", args.stream()
+                .collect(Collectors.joining(" ")));
+    }
 }

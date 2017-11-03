@@ -3,7 +3,7 @@ package com.github.ledoyen.winter.stepdef;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.ledoyen.automocker.extension.jmx.LocalMBeans;
+import com.github.ledoyen.automocker.api.jmx.LocalMBeans;
 
 import cucumber.api.java.After;
 import cucumber.api.java.en.Given;

@@ -6,8 +6,8 @@ import javax.inject.Provider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.ledoyen.automocker.extension.batch.BatchLauncherMock;
-import com.github.ledoyen.automocker.extension.batch.BatchMock;
+import com.github.ledoyen.automocker.api.batch.BatchLauncherMock;
+import com.github.ledoyen.automocker.api.batch.BatchMock;
 
 import cucumber.api.java.After;
 import cucumber.api.java.en.Then;

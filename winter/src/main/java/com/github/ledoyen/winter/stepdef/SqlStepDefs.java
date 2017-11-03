@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.ledoyen.automocker.extension.sql.Connections;
-import com.github.ledoyen.automocker.extension.sql.DataSources;
-import com.github.ledoyen.automocker.extension.sql.DatasourceLocator;
+import com.github.ledoyen.automocker.api.jdbc.Connections;
+import com.github.ledoyen.automocker.api.jdbc.DataSources;
+import com.github.ledoyen.automocker.api.jdbc.DatasourceLocator;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 

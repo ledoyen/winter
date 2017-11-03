@@ -3,24 +3,24 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.github.ledoyen.winter</groupId>
+		<groupId>com.github.ledoyen</groupId>
 		<artifactId>winter-reactor</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>winter</artifactId>
 
 	<properties>
-		<automocker.version>1.0.0-SNAPSHOT</automocker.version>
+		<automocker.version>1.1.0-SNAPSHOT</automocker.version>
 		<cucumber.version>1.2.5</cucumber.version>
 		<bytebuddy.version>1.5.3</bytebuddy.version>
 
-		<spring.boot.version>1.3.3.RELEASE</spring.boot.version>
+		<spring.boot.version>1.5.7.RELEASE</spring.boot.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.ledoyen.automocker</groupId>
+			<groupId>com.github.ledoyen</groupId>
 			<artifactId>spring-automocker</artifactId>
 			<version>${automocker.version}</version>
 		</dependency>
@@ -35,7 +35,6 @@
 			<version>1</version>
 		</dependency>
 
-
 		<!-- CUCUMBER -->
 		<dependency>
 			<groupId>info.cukes</groupId>
@@ -47,6 +46,11 @@
 			<artifactId>cucumber-junit</artifactId>
 			<version>${cucumber.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
+        </dependency>
 
 		<!-- Optional dependencies -->
 		<dependency>

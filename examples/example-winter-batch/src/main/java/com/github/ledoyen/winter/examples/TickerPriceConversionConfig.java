@@ -37,7 +37,7 @@ public class TickerPriceConversionConfig {
 	public ItemReader<TickerData> reader() throws MalformedURLException {
 		FlatFileItemReader<TickerData> reader = new FlatFileItemReader<TickerData>();
 		reader.setResource(
-				new UrlResource("http://finance.yahoo.com/d/quotes.csv?s=XOM+IBM+JNJ+MSFT&amp;f=snd1ol1p2"));
+				new UrlResource("http://download.finance.yahoo.com/d/quotes.csv?s=XOM+IBM+JNJ+MSFT&f=snd1ol1p2"));
 		reader.setLineMapper(new DefaultLineMapper<TickerData>() {
 			{
 				setLineTokenizer(new DelimitedLineTokenizer());
